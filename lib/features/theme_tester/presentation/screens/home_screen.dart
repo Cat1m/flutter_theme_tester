@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_theme_tester/features/theme_tester/presentation/screens/flex_preview_screen.dart';
 import 'package:flutter_theme_tester/features/theme_tester/presentation/widgets/theme_selector/predefined_theme_grid.dart';
 import 'package:provider/provider.dart';
 import '../../data/theme_store.dart';
@@ -7,6 +9,7 @@ import '../providers/theme_provider.dart';
 import '../widgets/color_input/four_color_input_form.dart';
 import '../widgets/theme_selector/theme_mode_toggle.dart';
 import 'theme_preview_screen.dart';
+import 'package:device_preview/device_preview.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -32,9 +35,12 @@ class _HomeScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.watch<ThemeProvider>().appTheme;
 
-    return MaterialApp(
+    final app = MaterialApp(
       title: 'Flutter Theme Tester',
       debugShowCheckedModeBanner: false,
+      useInheritedMediaQuery: !kReleaseMode, // để DevicePreview đọc media query
+      builder: !kReleaseMode ? DevicePreview.appBuilder : null,
+      locale: !kReleaseMode ? DevicePreview.locale(context) : null,
       themeMode: theme.mode,
       theme: theme.light,
       darkTheme: theme.dark,
@@ -55,18 +61,29 @@ class _HomeScaffold extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
-                // Grid đã shrinkWrap + không cuộn, để parent cuộn
                 const PredefinedThemeGrid(),
                 const SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FilledButton(
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const ThemePreviewScreen(),
+                Builder(
+                  builder: (inner) => Wrap(
+                    spacing: 12,
+                    children: [
+                      FilledButton(
+                        onPressed: () => Navigator.of(inner).push(
+                          MaterialPageRoute(
+                            builder: (_) => const ThemePreviewScreen(),
+                          ),
+                        ),
+                        child: const Text('Xem Preview (Lite)'),
                       ),
-                    ),
-                    child: const Text('Xem Preview'),
+                      OutlinedButton(
+                        onPressed: () => Navigator.of(inner).push(
+                          MaterialPageRoute(
+                            builder: (_) => const FlexPreviewScreen(),
+                          ),
+                        ),
+                        child: const Text('Flex Preview (M3)'),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -75,5 +92,10 @@ class _HomeScaffold extends StatelessWidget {
         ),
       ),
     );
+
+    // Chỉ wrap DevicePreview ở debug/dev
+    return kReleaseMode
+        ? app
+        : DevicePreview(enabled: true, builder: (_) => app);
   }
 }
