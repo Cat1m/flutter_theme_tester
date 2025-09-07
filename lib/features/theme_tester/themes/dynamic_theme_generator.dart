@@ -1,5 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../data/models/color_palette.dart';
 
 class DynamicThemeGenerator {
@@ -31,16 +32,14 @@ class DynamicThemeGenerator {
           primary: p.primary,
           secondary: p.secondary,
           surface: p.surface,
-          background: p.background,
 
           // Ensure proper contrast
           onPrimary: _getOnColor(p.primary),
           onSecondary: _getOnColor(p.secondary),
           onSurface: _getOnColor(p.surface),
-          onBackground: _getOnColor(p.background),
 
           // Additional surfaces for consistency
-          surfaceVariant: _adjustLightness(p.surface, 0.05),
+          surfaceContainerHighest: _adjustLightness(p.surface, 0.05),
           onSurfaceVariant: _getOnColor(_adjustLightness(p.surface, 0.05)),
         ),
 
@@ -78,14 +77,12 @@ class DynamicThemeGenerator {
           primary: _adjustForDark(p.primary),
           secondary: _adjustForDark(p.secondary),
           surface: darkPalette.surface,
-          background: darkPalette.background,
 
           onPrimary: _getOnColor(_adjustForDark(p.primary)),
           onSecondary: _getOnColor(_adjustForDark(p.secondary)),
           onSurface: _getOnColor(darkPalette.surface),
-          onBackground: _getOnColor(darkPalette.background),
 
-          surfaceVariant: _adjustLightness(darkPalette.surface, -0.05),
+          surfaceContainerHighest: _adjustLightness(darkPalette.surface, -0.05),
           onSurfaceVariant: _getOnColor(
             _adjustLightness(darkPalette.surface, -0.05),
           ),
@@ -99,21 +96,27 @@ class DynamicThemeGenerator {
     final colorScheme = base.colorScheme;
     final isDark = base.brightness == Brightness.dark;
 
+    // Lấy đúng nền của Scaffold
+    final bg = base.scaffoldBackgroundColor;
+    final onBg = _getOnColor(bg);
+    final overlay = ThemeData.estimateBrightnessForColor(bg) == Brightness.dark
+        ? SystemUiOverlayStyle
+              .light // nền tối -> icon sáng
+        : SystemUiOverlayStyle.dark; // nền sáng -> icon tối
+
     return base.copyWith(
       // ===== APP BAR =====
       appBarTheme: AppBarTheme(
         elevation: 0,
-        scrolledUnderElevation: 1,
-        backgroundColor: colorScheme.surface,
-        foregroundColor: colorScheme.onSurface,
-        surfaceTintColor: colorScheme.primary,
-        titleTextStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: colorScheme.onSurface,
-        ),
-        actionsIconTheme: IconThemeData(color: colorScheme.onSurface, size: 24),
-        iconTheme: IconThemeData(color: colorScheme.onSurface, size: 24),
+        scrolledUnderElevation: 0, // tắt hiệu ứng “scrolled under”
+        backgroundColor: bg, // TRÙNG với Scaffold
+        foregroundColor: onBg, // chữ/icon tương phản
+        surfaceTintColor: Colors.transparent, // tắt tint của M3
+        systemOverlayStyle: overlay, // icon status bar đúng màu
+        titleTextStyle: (base.textTheme.titleLarge ?? const TextStyle())
+            .copyWith(fontSize: 20, fontWeight: FontWeight.w600, color: onBg),
+        actionsIconTheme: IconThemeData(color: onBg, size: 24),
+        iconTheme: IconThemeData(color: onBg, size: 24),
       ),
 
       // ===== CARDS =====
@@ -199,13 +202,13 @@ class DynamicThemeGenerator {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: isDark
-            ? colorScheme.surfaceVariant.withOpacity(0.08)
-            : colorScheme.surfaceVariant.withOpacity(0.04),
+            ? colorScheme.surfaceContainerHighest.withValues(alpha: .08)
+            : colorScheme.surfaceContainerHighest.withValues(alpha: .04),
 
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: colorScheme.outline.withOpacity(0.38),
+            color: colorScheme.outline.withValues(alpha: .38),
             width: 1,
           ),
         ),
@@ -213,7 +216,7 @@ class DynamicThemeGenerator {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: colorScheme.outline.withOpacity(0.38),
+            color: colorScheme.outline.withValues(alpha: .38),
             width: 1,
           ),
         ),
@@ -239,12 +242,12 @@ class DynamicThemeGenerator {
         ),
 
         hintStyle: TextStyle(
-          color: colorScheme.onSurface.withOpacity(0.6),
+          color: colorScheme.onSurface.withValues(alpha: .6),
           fontSize: 16,
         ),
 
         labelStyle: TextStyle(
-          color: colorScheme.onSurface.withOpacity(0.8),
+          color: colorScheme.onSurface.withValues(alpha: .8),
           fontSize: 16,
         ),
       ),
@@ -253,7 +256,7 @@ class DynamicThemeGenerator {
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: colorScheme.surface,
         selectedItemColor: colorScheme.primary,
-        unselectedItemColor: colorScheme.onSurface.withOpacity(0.6),
+        unselectedItemColor: colorScheme.onSurface.withValues(alpha: .6),
         type: BottomNavigationBarType.fixed,
         elevation: isDark ? 8 : 3,
         selectedLabelStyle: const TextStyle(
@@ -273,15 +276,15 @@ class DynamicThemeGenerator {
         elevation: isDark ? 3 : 2,
         height: 80,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        iconTheme: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        iconTheme: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return IconThemeData(
               color: colorScheme.onSecondaryContainer,
               size: 24,
             );
           }
           return IconThemeData(
-            color: colorScheme.onSurface.withOpacity(0.6),
+            color: colorScheme.onSurface.withValues(alpha: .6),
             size: 24,
           );
         }),
@@ -289,7 +292,7 @@ class DynamicThemeGenerator {
 
       // ===== DIVIDER =====
       dividerTheme: DividerThemeData(
-        color: colorScheme.outline.withOpacity(0.2),
+        color: colorScheme.outline.withValues(alpha: .2),
         thickness: 1,
         space: 1,
       ),
@@ -306,13 +309,13 @@ class DynamicThemeGenerator {
         subtitleTextStyle: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: colorScheme.onSurface.withOpacity(0.7),
+          color: colorScheme.onSurface.withValues(alpha: .7),
         ),
       ),
 
       // ===== CHIP =====
       chipTheme: ChipThemeData(
-        backgroundColor: colorScheme.surfaceVariant,
+        backgroundColor: colorScheme.surfaceContainerHighest,
         selectedColor: colorScheme.secondaryContainer,
         side: BorderSide.none,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -338,7 +341,7 @@ class DynamicThemeGenerator {
         contentTextStyle: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w400,
-          color: colorScheme.onSurface.withOpacity(0.8),
+          color: colorScheme.onSurface.withValues(alpha: .8),
           height: 1.4,
         ),
       ),
@@ -355,15 +358,14 @@ class DynamicThemeGenerator {
 
       // ===== SNACK BAR =====
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: isDark
-            ? colorScheme.inverseSurface
-            : colorScheme.inverseSurface,
+        backgroundColor: colorScheme.inverseSurface,
         contentTextStyle: TextStyle(
-          color: colorScheme.inverseSurface,
+          color:
+              colorScheme.onInverseSurface, // <-- Đúng cặp với inverseSurface
           fontSize: 14,
           fontWeight: FontWeight.w500,
         ),
-        actionTextColor: colorScheme.inversePrimary,
+        actionTextColor: colorScheme.inversePrimary, // <-- Chuẩn M3
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         behavior: SnackBarBehavior.floating,
         elevation: isDark ? 6 : 3,
@@ -371,25 +373,25 @@ class DynamicThemeGenerator {
 
       // ===== SWITCH =====
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return colorScheme.onPrimary;
           }
           return colorScheme.outline;
         }),
-        trackColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return colorScheme.primary;
           }
-          return colorScheme.surfaceVariant;
+          return colorScheme.surfaceContainerHighest;
         }),
       ),
 
       // ===== PROGRESS INDICATORS =====
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: colorScheme.primary,
-        linearTrackColor: colorScheme.primary.withOpacity(0.2),
-        circularTrackColor: colorScheme.primary.withOpacity(0.2),
+        linearTrackColor: colorScheme.primary.withValues(alpha: .2),
+        circularTrackColor: colorScheme.primary.withValues(alpha: .2),
       ),
     );
   }

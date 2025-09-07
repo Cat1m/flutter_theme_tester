@@ -17,10 +17,10 @@ class ThemeStore {
         Color(sp.getInt(key) ?? fallback);
 
     final palette = ColorPalette(
-      primary: readColor(_kPrimary, const Color(0xFF5B3A91).value),
-      secondary: readColor(_kSecondary, const Color(0xFF8E5BD5).value),
-      surface: readColor(_kSurface, const Color(0xFFFFFFFF).value),
-      background: readColor(_kBackground, const Color(0xFFF5F0FF).value),
+      primary: readColor(_kPrimary, const Color(0xFF5B3A91).toARGB32()),
+      secondary: readColor(_kSecondary, const Color(0xFF8E5BD5).toARGB32()),
+      surface: readColor(_kSurface, const Color(0xFFFFFFFF).toARGB32()),
+      background: readColor(_kBackground, const Color(0xFFF5F0FF).toARGB32()),
     );
 
     return ThemeConfig(mode: ThemeMode.values[modeIndex], palette: palette);
@@ -29,9 +29,9 @@ class ThemeStore {
   Future<void> save(ThemeConfig config) async {
     final sp = await SharedPreferences.getInstance();
     await sp.setInt(_kMode, config.mode.index);
-    await sp.setInt(_kPrimary, config.palette.primary.value);
-    await sp.setInt(_kSecondary, config.palette.secondary.value);
-    await sp.setInt(_kSurface, config.palette.surface.value);
-    await sp.setInt(_kBackground, config.palette.background.value);
+    await sp.setInt(_kPrimary, config.palette.primary.toARGB32());
+    await sp.setInt(_kSecondary, config.palette.secondary.toARGB32());
+    await sp.setInt(_kSurface, config.palette.surface.toARGB32());
+    await sp.setInt(_kBackground, config.palette.background.toARGB32());
   }
 }
