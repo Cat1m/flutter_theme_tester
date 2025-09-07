@@ -2,11 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter_theme_tester/my_app.dart';
-import 'features/theme_tester/presentation/screens/home_screen.dart';
-import 'features/theme_tester/presentation/providers/theme_provider.dart';
-import 'features/theme_tester/presentation/providers/color_input_provider.dart';
-import 'features/theme_tester/data/theme_store.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
