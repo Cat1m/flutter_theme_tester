@@ -1,4 +1,5 @@
 enum PredefinedThemes {
+  gengar94,
   ocean,
   sunset,
   forest,

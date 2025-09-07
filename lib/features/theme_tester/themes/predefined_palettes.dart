@@ -90,6 +90,17 @@ class PredefinedPalettes {
           surface: Color(0xFFFFFFFF),
           background: Color(0xFFFFF1EE),
         );
+      case PredefinedThemes.gengar94:
+        return const ColorPalette(
+          // Gengar deep purple
+          primary: Color(0xFF5B3A91),
+          // Violet accent
+          secondary: Color(0xFF8E5BD5),
+          // Surfaces
+          surface: Color(0xFFFFFFFF),
+          // Soft lavender background
+          background: Color(0xFFF5F0FF),
+        );
     }
   }
 
@@ -106,5 +117,6 @@ class PredefinedPalettes {
     PredefinedThemes.plum: 'Plum',
     PredefinedThemes.slate: 'Slate',
     PredefinedThemes.coral: 'Coral',
+    PredefinedThemes.gengar94: 'Gengar',
   };
 }

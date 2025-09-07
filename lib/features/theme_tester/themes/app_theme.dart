@@ -8,8 +8,13 @@ class AppTheme {
 
   ThemeMode get mode => config.mode;
 
-  ThemeData get light =>
-      DynamicThemeGenerator.fromPalette(config.palette, dark: false);
-  ThemeData get dark =>
-      DynamicThemeGenerator.fromPalette(config.palette, dark: true);
+  ThemeData get light {
+    final base = DynamicThemeGenerator.fromPalette(config.palette, dark: false);
+    return DynamicThemeGenerator.applyComponentThemes(base);
+  }
+
+  ThemeData get dark {
+    final base = DynamicThemeGenerator.fromPalette(config.palette, dark: true);
+    return DynamicThemeGenerator.applyComponentThemes(base);
+  }
 }

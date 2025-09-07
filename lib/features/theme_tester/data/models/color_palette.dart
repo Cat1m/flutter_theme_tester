@@ -14,9 +14,9 @@ class ColorPalette {
   });
 
   factory ColorPalette.defaults() => const ColorPalette(
-    primary: Color(0xFF009688),
-    secondary: Color(0xFF26A69A),
+    primary: Color(0xFF5B3A91),
+    secondary: Color(0xFF8E5BD5),
     surface: Color(0xFFFFFFFF),
-    background: Color(0xFFF2F2F2),
+    background: Color(0xFFF5F0FF),
   );
 }

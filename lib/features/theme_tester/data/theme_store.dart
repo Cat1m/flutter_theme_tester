@@ -17,10 +17,10 @@ class ThemeStore {
         Color(sp.getInt(key) ?? fallback);
 
     final palette = ColorPalette(
-      primary: readColor(_kPrimary, const Color(0xFF009688).value),
-      secondary: readColor(_kSecondary, const Color(0xFF26A69A).value),
+      primary: readColor(_kPrimary, const Color(0xFF5B3A91).value),
+      secondary: readColor(_kSecondary, const Color(0xFF8E5BD5).value),
       surface: readColor(_kSurface, const Color(0xFFFFFFFF).value),
-      background: readColor(_kBackground, const Color(0xFFF2F2F2).value),
+      background: readColor(_kBackground, const Color(0xFFF5F0FF).value),
     );
 
     return ThemeConfig(mode: ThemeMode.values[modeIndex], palette: palette);
