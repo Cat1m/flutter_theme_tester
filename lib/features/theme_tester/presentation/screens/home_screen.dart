@@ -1,9 +1,12 @@
+// lib/features/theme_tester/presentation/screens/home_screen.dart
 import 'package:flutter/material.dart';
 import '../widgets/color_input/four_color_input_form.dart';
 import '../widgets/theme_selector/theme_mode_toggle.dart';
 import '../widgets/theme_selector/predefined_theme_grid.dart';
 import 'flex_preview_screen.dart';
 import 'theme_preview_screen.dart';
+import 'demo_screen.dart';
+import 'theme_settings_screen.dart'; // 👈 import mới
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -32,6 +35,7 @@ class HomeScreen extends StatelessWidget {
               Builder(
                 builder: (inner) => Wrap(
                   spacing: 12,
+                  runSpacing: 12,
                   children: [
                     FilledButton(
                       onPressed: () => Navigator.of(inner).push(
@@ -48,6 +52,21 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       child: const Text('Flex Preview (M3)'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => Navigator.of(inner).push(
+                        MaterialPageRoute(builder: (_) => const DemoScreen()),
+                      ),
+                      child: const Text('Demo Gradient'),
+                    ),
+                    // 👇 nút mở Theme Settings
+                    FilledButton.tonal(
+                      onPressed: () => Navigator.of(inner).push(
+                        MaterialPageRoute(
+                          builder: (_) => const ThemeSettingsScreen(),
+                        ),
+                      ),
+                      child: const Text('Theme Settings'),
                     ),
                   ],
                 ),
