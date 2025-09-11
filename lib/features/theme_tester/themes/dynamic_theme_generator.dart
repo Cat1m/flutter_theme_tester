@@ -1,7 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_theme_tester/features/theme_tester/components/app_bar_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/badge_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/bottom_sheet_theme.dart';
 import 'package:flutter_theme_tester/features/theme_tester/components/button_theme.dart';
 import 'package:flutter_theme_tester/features/theme_tester/components/card_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/chip_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/data_table_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/dialog_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/fab_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/input_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/list_tile_density.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/menu_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/navigation_drawer_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/navigation_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/pickers_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/popup_menu_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/searchbar_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/segmented_button_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/slider_progress_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/toggle_theme.dart';
+import 'package:flutter_theme_tester/features/theme_tester/components/tooltip_snack_theme.dart';
 import 'package:flutter_theme_tester/features/theme_tester/engines/flex_engine.dart';
 import 'package:flutter_theme_tester/features/theme_tester/engines/vanilla_engine.dart';
 import 'package:flutter_theme_tester/features/theme_tester/themes/app_decoration_tokens.dart';
@@ -50,7 +68,24 @@ class DynamicThemeGenerator {
     base = applyAppBarTheme(base, tokens);
     base = applyButtonTheme(base, tokens);
     base = applyCardTheme(base, tokens);
-
+    base = applyInputTheme(base, tokens);
+    base = applyChipTheme(base, tokens);
+    base = applyDataTableTheme(base, tokens);
+    base = applyNavigationThemes(base, tokens);
+    base = applySegmentedButtonTheme(base, tokens);
+    base = applyTooltipAndSnackThemes(base, tokens);
+    base = applyToggleThemes(base, tokens);
+    base = applySliderAndProgressThemes(base, tokens);
+    base = applyNavigationDrawerTheme(base, tokens);
+    base = applyDialogTheme(base, tokens);
+    base = applyPickersTheme(base, tokens);
+    base = applyBadgeTheme(base, tokens);
+    base = applyListTileDensity(base, tokens);
+    base = applySearchBarTheme(base, tokens);
+    base = applyMenuThemes(base, tokens);
+    base = applyPopupMenuTheme(base, tokens);
+    base = applyFabTheme(base, tokens);
+    base = applyBottomSheetTheme(base, tokens);
     return base;
   }
 }

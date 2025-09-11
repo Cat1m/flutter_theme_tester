@@ -41,8 +41,8 @@ class _DemoPanel extends StatelessWidget {
       appBar: AppBar(title: Text(title)),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: const [
-          Wrap(
+        children: [
+          const Wrap(
             spacing: 12,
             runSpacing: 12,
             children: [
@@ -50,15 +50,107 @@ class _DemoPanel extends StatelessWidget {
               FilledButton(onPressed: null, child: Text('Primary')),
             ],
           ),
-          SizedBox(height: 12),
-          Card(
+          const SizedBox(height: 12),
+          const Card(
             child: Padding(
               padding: EdgeInsets.all(16.0),
               child: Text('This is a Card – uses shared components overrides.'),
             ),
           ),
-          SizedBox(height: 12),
-          TextField(decoration: InputDecoration(labelText: 'Input demo')),
+          const SizedBox(height: 12),
+          const TextField(decoration: InputDecoration(labelText: 'Input demo')),
+
+          const SizedBox(height: 16),
+          const Divider(),
+          const SizedBox(height: 8),
+
+          // SegmentedButton demo
+          SegmentedButton<int>(
+            segments: const [
+              ButtonSegment(
+                value: 1,
+                label: Text('One'),
+                icon: Icon(Icons.looks_one),
+              ),
+              ButtonSegment(
+                value: 2,
+                label: Text('Two'),
+                icon: Icon(Icons.looks_two),
+              ),
+              ButtonSegment(
+                value: 3,
+                label: Text('Three'),
+                icon: Icon(Icons.looks_3),
+              ),
+            ],
+            selected: const {2},
+            onSelectionChanged: (_) {},
+          ),
+
+          const SizedBox(height: 12),
+
+          // NavigationBar demo
+          NavigationBar(
+            selectedIndex: 1,
+            onDestinationSelected: (_) {},
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.favorite_border),
+                selectedIcon: Icon(Icons.favorite),
+                label: 'Fav',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.settings_outlined),
+                selectedIcon: Icon(Icons.settings),
+                label: 'Settings',
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          // Toggles demo
+          const Row(
+            children: const [
+              Switch(value: true, onChanged: null),
+              SizedBox(width: 8),
+              Checkbox(value: true, onChanged: null),
+              SizedBox(width: 8),
+              Radio(value: 1, groupValue: 1, onChanged: null),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          // Slider/Progress demo
+          Slider(value: 0.6, onChanged: (_) {}),
+          const LinearProgressIndicator(value: 0.6),
+          const SizedBox(height: 8),
+          const CircularProgressIndicator(),
+
+          const SizedBox(height: 12),
+
+          // Tooltip/Snack demo triggers
+          Wrap(
+            spacing: 8,
+            children: [
+              const Tooltip(
+                message: 'I\'m a tooltip',
+                child: const Icon(Icons.info_outline),
+              ),
+              ElevatedButton(
+                onPressed: () => ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Hello SnackBar'))),
+                child: const Text('Show Snack'),
+              ),
+            ],
+          ),
         ],
       ),
     );
