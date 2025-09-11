@@ -24,6 +24,8 @@ class ThemeProvider extends ChangeNotifier {
   // 👇 Thêm getter để lấy UI config hiện tại
   AppThemeConfig get ui => _config.ui;
 
+  ThemeConfig get themeConfig => _config;
+
   Future<void> init() async {
     _config = await _store.load();
 

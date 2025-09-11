@@ -8,10 +8,11 @@ class ThemeModeToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<ThemeProvider>();
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Theme Mode:'),
-        const SizedBox(width: 12),
+        const Text('Theme Mode'),
+        const SizedBox(height: 12),
         SegmentedButton<ThemeMode>(
           segments: const [
             ButtonSegment(value: ThemeMode.light, label: Text('Light')),

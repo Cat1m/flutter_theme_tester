@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/models/theme_config.dart';
-import '../data/models/color_palette.dart';
+// Xoá import không dùng:
+// import '../data/models/color_palette.dart';
 import 'dynamic_theme_generator.dart';
 
 class AppTheme {
@@ -14,21 +15,17 @@ class AppTheme {
     final p = config.palette;
     final ui = config.ui;
 
-    final lightBase = DynamicThemeGenerator.fromPalette(
+    final lightTheme = DynamicThemeGenerator.fromPalette(
       p,
       config: ui,
       dark: false,
     );
-    final darkBase = DynamicThemeGenerator.fromPalette(
+    final darkTheme = DynamicThemeGenerator.fromPalette(
       p,
       config: ui,
       dark: true,
     );
 
-    // Optional: áp overrides component (nếu bạn muốn giữ như bản trước)
-    final lightFull = DynamicThemeGenerator.applyComponentThemes(lightBase);
-    final darkFull = DynamicThemeGenerator.applyComponentThemes(darkBase);
-
-    return AppTheme._(config.mode, lightFull, darkFull);
+    return AppTheme._(config.mode, lightTheme, darkTheme);
   }
 }
